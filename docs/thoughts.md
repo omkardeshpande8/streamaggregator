@@ -1,7 +1,7 @@
-#Scalability
+Scalability
 
-#Variable volume
+Variable volume
 
-#Productization
+Productization
 
-#Functional Testing
+Functional Testing

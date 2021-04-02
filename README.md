@@ -25,4 +25,4 @@ java -jar <jar-name>
 ### Github actions workflow
 If you don't feel comfortable downloading jars from untrusted sources, there is a github action set up [here](https://github.com/omkardeshpande8/streamaggregator/actions/workflows/run.yml) that executes the project. It takes the timeout in seconds as input.
 
-###[Further work](docs/thoughts.md)
+[Further work](docs/thoughts.md)
