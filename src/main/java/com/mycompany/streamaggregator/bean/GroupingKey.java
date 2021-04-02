@@ -2,6 +2,9 @@ package com.mycompany.streamaggregator.bean;
 
 import java.util.Objects;
 
+/**
+ * Grouping key class comprising of device, title and country
+ */
 public class GroupingKey {
 
     private final String device;
@@ -14,6 +17,9 @@ public class GroupingKey {
         this.country = country;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -22,20 +28,37 @@ public class GroupingKey {
         return device.equals(that.device) && title.equals(that.title) && country.equals(that.country);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(device, title, country);
     }
 
+
+    /**
+     * Getter for device
+     * @return string device
+     */
     public String getDevice() {
         return device;
     }
 
+    /**
+     * Getter for title
+     * @return string title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Getter for country
+     * @return string country
+     */
     public String getCountry() {
         return country;
     }
+
 }
