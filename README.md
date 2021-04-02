@@ -23,6 +23,4 @@ Download the jar from the latest release and run
 java -jar streamaggregator-1.0.jar 
 ```
 ### Github actions workflow
-If you don't feel comfortable downloading jars from untrusted sources, there is a github action set up 
-[here]:(https://github.com/omkardeshpande8/streamaggregator/actions/workflows/run.yml)
-that executes the project. It takes the timeout in seconds as input.
+If you don't feel comfortable downloading jars from untrusted sources, there is a github action set up [here](https://github.com/omkardeshpande8/streamaggregator/actions/workflows/run.yml) that executes the project. It takes the timeout in seconds as input.
