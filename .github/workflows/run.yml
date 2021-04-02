@@ -9,7 +9,7 @@ on:
         default: '60'
 
 jobs:
-  build_and_test:
+  execute_driver:
 
     runs-on: ubuntu-latest
 
@@ -20,7 +20,7 @@ jobs:
       with:
         java-version: 8
 
-    - name: Build project with Maven
+    - name: Run the main class
       run: timeout ${{ github.event.inputs.duration }} mvn compile exec:java -Dexec.mainClass="com.mycompany.streamaggregator.Driver" || true
 
 
