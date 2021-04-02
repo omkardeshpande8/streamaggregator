@@ -7,9 +7,14 @@ import com.mycompany.streamaggregator.bean.GroupingKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -41,15 +46,37 @@ public class BufferedEventHandler implements EventHandler {
     }
 
     /**
+     * Tries to read the interval in seconds from config.properties file
+     * if it's not available, return 1
+     * @return interval
+     */
+    private int getInterval() {
+        int interval = 1;
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
+            Properties prop = new Properties();
+            prop.load(input);
+            String key = "interval.seconds";
+            if(prop.containsKey(key)) {
+                interval = Integer.parseInt(prop.getProperty(key));
+            }
+        } catch (IOException ex) {
+            LOGGER.error("config.properties file not found. Using default values");
+        }
+        return interval;
+    }
+
+    /**
      * Gets invoked when the stream is opened
      * Schedules a task at 1 second interval
      */
     public void onOpen() {
-        LOGGER.info("onOpen called. Scheduling the thread");
+        int interval = getInterval();
+
+        LOGGER.info("onOpen called. Scheduling the thread with interval:{} seconds", interval);
         ScheduledExecutorService scheduledExecutorService =
                 Executors.newScheduledThreadPool(1);
 
-        scheduledExecutorService.scheduleAtFixedRate(this::run, 1, 1, TimeUnit.SECONDS);
+        scheduledExecutorService.scheduleAtFixedRate(this::run, interval, interval, TimeUnit.SECONDS);
     }
 
     /**
