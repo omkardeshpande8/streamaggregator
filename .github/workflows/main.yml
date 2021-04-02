@@ -17,4 +17,4 @@ jobs:
         java-version: 8
 
     - name: Build project with Maven
-      run: mvn clean compile
+      run: mvn clean compile test
