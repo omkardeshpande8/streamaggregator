@@ -3,7 +3,10 @@ name: Maven Execute
 on:
   workflow_dispatch:
     inputs:
-      duration: 60
+      duration:
+        description: 'The timeout to terminate the streaming application in seconds'
+        required: true
+        default: '60'
 
 jobs:
   build_and_test:
