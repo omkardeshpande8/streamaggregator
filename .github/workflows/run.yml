@@ -17,5 +17,6 @@ jobs:
         java-version: 8
 
     - name: Build project with Maven
-      run: mvn compile exec:java -Dexec.mainClass="com.mycompany.streamaggregator.Driver"
+      run: timeout 1 mvn compile exec:java -Dexec.mainClass="com.mycompany.streamaggregator.Driver" || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; fi
+
 
