@@ -3,14 +3,30 @@ package com.mycompany.streamaggregator.bean;
 import java.util.Objects;
 
 /**
- * Grouping key class comprising of device, title and country
+ * Grouping key class comprising of device, title and country.
+ * Used for grouping events while getting counts
  */
 public class GroupingKey {
 
+    /**
+     * Device
+     */
     private final String device;
+    /**
+     * Title
+     */
     private final String title;
+    /**
+     * Country
+     */
     private final String country;
 
+    /**
+     * Constructor
+     * @param device device
+     * @param title title
+     * @param country country
+     */
     public GroupingKey(String device, String title, String country) {
         this.device = device;
         this.title = title;

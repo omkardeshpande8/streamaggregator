@@ -50,7 +50,7 @@ public class Aggregator {
      * after filtering out the events with status failed
      * @return map of grouping key and count as value
      */
-    public Map<GroupingKey, Integer> aggregateParallel(){
+    public Map<GroupingKey, Integer> aggregateParallely(){
         Map<GroupingKey, Integer> success = list
                 .parallelStream()
                 .filter(e -> e.getSev().equals(Event.Sev.SUCCESS))

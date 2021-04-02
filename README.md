@@ -2,7 +2,7 @@
 
 ## Prerequisites
 1. Java 1.8
-2. Maven 3.x+ (Any version should work, I am using 3.6.3)
+2. Maven 3.X.Y (Any version should work, I am using 3.6.3)
 
 ## Clone the repository
 ```
@@ -13,7 +13,7 @@ git clone https://github.com/omkardeshpande8/streamaggregator.git
 ```
 mvn clean compile exec:java -Dexec.mainClass="com.mycompany.streamaggregator.Driver"
 ```
-Output will be printed on terminal and also will be written to logs/output.txt
+Output will be printed on the terminal and also will be written to `logs/output.txt` file.
 
 ## Alternatives
 If maven is not installed on the system, following options are available
@@ -24,3 +24,5 @@ java -jar <jar-name>
 ```
 ### Github actions workflow
 If you don't feel comfortable downloading jars from untrusted sources, there is a github action set up [here](https://github.com/omkardeshpande8/streamaggregator/actions/workflows/run.yml) that executes the project. It takes the timeout in seconds as input.
+
+###[Further work](docs/thoughts.md)

@@ -20,7 +20,7 @@ public class OutputRecord extends GroupingKey{
     private static final Logger LOGGER = LoggerFactory.getLogger(OutputRecord.class);
 
     /**
-     * int count
+     * Count
      */
     private final int count;
 

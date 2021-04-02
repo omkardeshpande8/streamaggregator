@@ -1,7 +1,5 @@
 package com.mycompany.streamaggregator.aggregate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.launchdarkly.eventsource.EventHandler;
 import com.launchdarkly.eventsource.MessageEvent;
 import com.mycompany.streamaggregator.bean.Event;
@@ -22,7 +20,6 @@ import java.util.concurrent.locks.StampedLock;
  */
 public class BufferedEventHandler implements EventHandler {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger LOGGER = LoggerFactory.getLogger(BufferedEventHandler.class);
 
     /**
@@ -44,7 +41,7 @@ public class BufferedEventHandler implements EventHandler {
     }
 
     /**
-     * Gets invoked when strem is opened
+     * Gets invoked when the stream is opened
      * Schedules a task at 1 second interval
      */
     public void onOpen() {
@@ -69,11 +66,9 @@ public class BufferedEventHandler implements EventHandler {
      */
     public void onMessage(String event, MessageEvent messageEvent) {
         long stamp = stampedLock.readLock();
-        try {
-            Event root = objectMapper.readValue(messageEvent.getData(), Event.class);
-            buffer.add(root);
-        } catch (JsonProcessingException e) {
-            LOGGER.error(e.getLocalizedMessage());
+        Event data = Event.getEventFromJson(messageEvent.getData());
+        if(data != null) {
+            buffer.add(data);
         }
         stampedLock.unlockRead(stamp);
     }
