@@ -2,7 +2,7 @@
 
 ## Prerequisites
 1. Java 1.8
-2. Maven 3.X.Y (Any version should work, I am using 3.6.3)
+2. Maven 3.X (Any version should work, I am using 3.6.3)
 
 ## Clone the repository
 ```
