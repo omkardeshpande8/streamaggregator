@@ -30,6 +30,7 @@ public class BufferedEventHandler implements EventHandler {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void onOpen() {
         LOGGER.info("onOpen called");
     }
@@ -37,6 +38,7 @@ public class BufferedEventHandler implements EventHandler {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void onClosed() {
         LOGGER.info("onClosed called");
     }
@@ -46,6 +48,7 @@ public class BufferedEventHandler implements EventHandler {
      * @param event event
      * @param messageEvent messageEvent
      */
+    @Override
     public void onMessage(String event, MessageEvent messageEvent) {
         Event data = Event.getEventFromJson(messageEvent.getData());
         if (data != null) {
@@ -56,6 +59,7 @@ public class BufferedEventHandler implements EventHandler {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void onComment(String comment) {
         LOGGER.info("onComment called:{}", comment);
     }
@@ -63,6 +67,7 @@ public class BufferedEventHandler implements EventHandler {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void onError(Throwable t) {
         LOGGER.error("onError called:{}", t.getLocalizedMessage());
     }
