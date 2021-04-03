@@ -52,7 +52,9 @@ public class BufferedEventHandler implements EventHandler {
     public void onMessage(String event, MessageEvent messageEvent) {
         Event data = Event.getEventFromJson(messageEvent.getData());
         if (data != null) {
-            buffer.add(data);
+            synchronized (buffer) {
+                buffer.add(data);
+            }
         }
     }
 

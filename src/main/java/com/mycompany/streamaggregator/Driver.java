@@ -25,13 +25,20 @@ import java.util.concurrent.TimeUnit;
 public class Driver {
 
     /**
-     * Driver for the class
+     * Logger for the class
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(Driver.class);
+
     /**
-     * Constant used to read properties Interval in seconds
+     * Key to read property Interval in seconds from config file
      */
     public static final String INTERVAL_SECONDS = "interval.seconds";
+
+    /**
+     * Key to read property synchronized from config file
+     */
+    public static final String SYNCHRONIZED = "synchronized";
+
     /**
      * Address to read server-sent events from
      */
@@ -50,6 +57,8 @@ public class Driver {
             LOGGER.error("config.properties file not found. Using default values");
         }
         properties.putIfAbsent(INTERVAL_SECONDS, "1");
+        properties.putIfAbsent(SYNCHRONIZED, "true");
+
         return properties;
     }
 
@@ -62,9 +71,10 @@ public class Driver {
 
         Properties properties = readProperties();
         int interval = Integer.parseInt(properties.getProperty(INTERVAL_SECONDS));
+        boolean sync = Boolean.parseBoolean(properties.getProperty(SYNCHRONIZED));
 
         Queue<Event> buffer = new LinkedList<>();
-        EventAggregator eventAggregator = new EventAggregator(buffer);
+        EventAggregator eventAggregator = new EventAggregator(buffer, sync);
         ScheduledExecutorService scheduledExecutorService =
                 Executors.newScheduledThreadPool(1);
 
