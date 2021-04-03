@@ -9,9 +9,14 @@
 git clone https://github.com/omkardeshpande8/streamaggregator.git
 ```
 
-## Execute the project
+## Build the jar and download dependencies
 ```
-mvn clean compile exec:java -Dexec.mainClass="com.mycompany.streamaggregator.Driver"
+mvn clean install
+```
+
+## Start the streaming application
+```
+java -cp "target/*" com.mycompany.streamaggregator.Driver
 ```
 Output will be printed on the terminal and also will be written to `logs/output.txt` file.
 
