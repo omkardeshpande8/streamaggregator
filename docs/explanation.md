@@ -12,7 +12,7 @@ There are 3 main components
 1. If the processing takes more than 1-second, then the subsequent aggregations will be delayed.
 2. If shutdown hook cannot be invoked, the data in the buffer is lost.
 
-## Backpressure
+### Backpressure
 HTTP/TCP protocol supports backpressure, so instead of letting the size of the buffer grow, we can apply back pressure at the source.
 The current implementation of backpressure is pretty naive. When enabled, the reading will be blocked when aggregation is happening.
 So in case of long-running aggregation operation, we won't have large number of records accumulated in the buffer.
