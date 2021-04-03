@@ -29,13 +29,17 @@ public class Driver {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(Driver.class);
     /**
-     * Constant used to read properties Interval in seconds
+     * Key to read property Interval in seconds from configs
      */
     public static final String INTERVAL_SECONDS = "interval.seconds";
     /**
      * Address to read server-sent events from
      */
     public static final String SERVICE_ADDRESS = "https://tweet-service.herokuapp.com/sps";
+    /**
+     * Key to read property is backpressure enabled from config
+     */
+    private static final String BACKPRESSURE_ENABLED = "backpressure.enabled";
 
     /**
      * Read properties from config.properties file
@@ -50,6 +54,7 @@ public class Driver {
             LOGGER.error("config.properties file not found. Using default values");
         }
         properties.putIfAbsent(INTERVAL_SECONDS, "1");
+        properties.putIfAbsent(BACKPRESSURE_ENABLED, "false");
         return properties;
     }
 
@@ -62,14 +67,15 @@ public class Driver {
 
         Properties properties = readProperties();
         int interval = Integer.parseInt(properties.getProperty(INTERVAL_SECONDS));
+        boolean backPressure = Boolean.parseBoolean(properties.getProperty(BACKPRESSURE_ENABLED));
 
         Queue<Event> buffer = new LinkedList<>();
-        EventAggregator eventAggregator = new EventAggregator(buffer);
+        EventAggregator eventAggregator = new EventAggregator(buffer, backPressure);
         ScheduledExecutorService scheduledExecutorService =
                 Executors.newScheduledThreadPool(1);
 
         //Create event source
-        EventHandler eventHandler = new BufferedEventHandler(buffer);
+        EventHandler eventHandler = new BufferedEventHandler(buffer, backPressure);
         URI uri = URI.create(SERVICE_ADDRESS);
         EventSource.Builder builder = new EventSource.Builder(eventHandler, uri)
                 .reconnectTime(Duration.ofMillis(3000));

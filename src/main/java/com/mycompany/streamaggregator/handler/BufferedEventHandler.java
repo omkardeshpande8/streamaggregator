@@ -19,12 +19,17 @@ public class BufferedEventHandler implements EventHandler {
      * Data/Event buffer
      */
     private final Queue<Event> buffer;
+    /**
+     * Backpressure enabled
+     */
+    private final boolean isBackpressureEnabled;
 
     /**
      * Constructor
      */
-    public BufferedEventHandler(Queue<Event> buffer) {
+    public BufferedEventHandler(Queue<Event> buffer, boolean isBackpressureEnabled) {
         this.buffer = buffer;
+        this.isBackpressureEnabled = isBackpressureEnabled;
     }
 
     /**
@@ -52,7 +57,13 @@ public class BufferedEventHandler implements EventHandler {
     public void onMessage(String event, MessageEvent messageEvent) {
         Event data = Event.getEventFromJson(messageEvent.getData());
         if (data != null) {
-            buffer.add(data);
+            if(!isBackpressureEnabled) {
+                buffer.add(data);
+            } else {
+                synchronized (buffer){
+                    buffer.add(data);
+                }
+            }
         }
     }
 

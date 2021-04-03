@@ -27,9 +27,14 @@ public class EventAggregator {
      * Buffer to hold the events
      */
     private final Queue<Event> buffer;
+    /**
+     * Is back pressure enabled
+     */
+    private final boolean isBackpressureEnabled;
 
-    public EventAggregator(Queue<Event> buffer) {
+    public EventAggregator(Queue<Event> buffer, boolean isBackpressureEnabled) {
         this.buffer = buffer;
+        this.isBackpressureEnabled = isBackpressureEnabled;
     }
 
     /**
@@ -37,26 +42,49 @@ public class EventAggregator {
      */
     public void aggregateAndPrint() {
         Map<GroupingKey, Integer> map = aggregate();
-        map.entrySet().stream()
-                .map(OutputRecord::new)
-                .map(OutputRecord::toString)
-                .forEach(LOGGER::info);
+        if (map != null) {
+            map.entrySet().stream()
+                    .map(OutputRecord::new)
+                    .map(OutputRecord::toString)
+                    .forEach(LOGGER::info);
+        }
     }
 
     /**
      * Aggregate buffer
+     *
      * @return map of key used for grouping and count
      */
     public Map<GroupingKey, Integer> aggregate() {
-        int size = buffer.size();
-        Map<GroupingKey, Integer> map = IntStream.range(0, size)
-                .mapToObj(i -> buffer.poll())
+        int size = 0;
+        Map<GroupingKey, Integer> map = null;
+
+        if (isBackpressureEnabled) {
+            synchronized (buffer) {
+                size += buffer.size();
+                map = getCounts(buffer, size);
+            }
+        } else {
+            size += buffer.size();
+            map = getCounts(buffer, size);
+        }
+        printBufferStats(size);
+        return map;
+    }
+
+
+    /**
+     * Generates counts by the grouping key for the events in the buffer
+     * @param events buffer
+     * @param bufferSize number of events to poll from the buffer
+     * @return Map<GroupingKey, Integer> grouping key and count is value
+     */
+    private Map<GroupingKey, Integer> getCounts(Queue<Event> events, int bufferSize) {
+        return IntStream.range(0, bufferSize)
+                .mapToObj(i -> events.poll())
                 .filter(Objects::nonNull)
                 .map(event -> new GroupingKey(event.getDevice(), event.getTitle(), event.getCountry()))
                 .collect(Collectors.toMap(Function.identity(), groupingKey -> 1, Integer::sum));
-
-        printBufferStats(size);
-        return map;
     }
 
     /**

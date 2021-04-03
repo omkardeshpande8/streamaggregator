@@ -45,7 +45,7 @@ public class DriverTest {
     @DisplayName("Correctness test")
     public void TestCorrectNess() {
         assertEquals(buffer.size(), 3596);
-        EventAggregator aggregator = new EventAggregator(buffer);
+        EventAggregator aggregator = new EventAggregator(buffer, false);
         Map<GroupingKey, Integer> aggregate = aggregator.aggregate();
         assertEquals(aggregate.get(new GroupingKey("xbox_one_x", "ointb", "USA")), 7);
         assertEquals(buffer.size(), 0);
