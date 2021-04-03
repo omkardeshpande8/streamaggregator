@@ -47,6 +47,7 @@ public class EventAggregator {
     public Map<GroupingKey, Integer> aggregate() {
         Map<GroupingKey, Integer> map = new HashMap<>();
         int size = buffer.size();
+        LOGGER.info("Processing {} events", buffer.size());
         for (int i = 0; i < size; i++) {
             Event poll = buffer.poll();
             GroupingKey gk = new GroupingKey(poll.getDevice(), poll.getTitle(), poll.getCountry());

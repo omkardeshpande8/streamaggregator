@@ -27,7 +27,8 @@ public class Event {
         SUCCESS,
         @JsonProperty("error")
         ERROR
-    };
+    }
+
     /**
      * Device
      */

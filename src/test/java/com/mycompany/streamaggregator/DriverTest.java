@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.streamaggregator.aggregate.EventAggregator;
 import com.mycompany.streamaggregator.bean.Event;
 import com.mycompany.streamaggregator.bean.GroupingKey;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class DriverTest {
 
@@ -25,7 +24,7 @@ public class DriverTest {
      * Read the events from the file
      * @throws IOException if file is not present at src/test/resources/data.txt
      */
-    @BeforeAll
+    @BeforeEach
     public static void setUp() throws IOException {
         String path = "src/test/resources/data.txt";
         ObjectMapper objectMapper = new ObjectMapper();
