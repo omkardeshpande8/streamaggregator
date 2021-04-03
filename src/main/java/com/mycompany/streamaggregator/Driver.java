@@ -12,10 +12,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.time.Duration;
-import java.util.LinkedList;
 import java.util.Properties;
-import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -42,6 +42,11 @@ public class Driver {
     private static final String BACKPRESSURE_ENABLED = "backpressure.enabled";
 
     /**
+     * Key to read property max size from config
+     */
+    private static final String MAX_SIZE = "max.size";
+
+    /**
      * Read properties from config.properties file
      *
      * @return Properties
@@ -53,8 +58,6 @@ public class Driver {
         } catch (IOException ex) {
             LOGGER.error("config.properties file not found. Using default values");
         }
-        properties.putIfAbsent(INTERVAL_SECONDS, "1");
-        properties.putIfAbsent(BACKPRESSURE_ENABLED, "false");
         return properties;
     }
 
@@ -66,10 +69,11 @@ public class Driver {
     public static void main(String[] args) throws InterruptedException {
 
         Properties properties = readProperties();
-        int interval = Integer.parseInt(properties.getProperty(INTERVAL_SECONDS));
-        boolean backPressure = Boolean.parseBoolean(properties.getProperty(BACKPRESSURE_ENABLED));
+        int interval = Integer.parseInt(properties.getProperty(INTERVAL_SECONDS, Integer.toString(1)));
+        boolean backPressure = Boolean.parseBoolean(properties.getProperty(BACKPRESSURE_ENABLED, Boolean.toString(Boolean.FALSE)));
+        int maxSize = Integer.parseInt(properties.getProperty(MAX_SIZE, Integer.toString(Integer.MAX_VALUE)));
 
-        Queue<Event> buffer = new LinkedList<>();
+        BlockingQueue<Event> buffer = new LinkedBlockingQueue<>(maxSize);
         EventAggregator eventAggregator = new EventAggregator(buffer, backPressure);
         ScheduledExecutorService scheduledExecutorService =
                 Executors.newScheduledThreadPool(1);

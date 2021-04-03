@@ -11,15 +11,16 @@ import org.junit.jupiter.api.Test;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DriverTest {
 
-    private Queue<Event> buffer;
+    private BlockingQueue<Event> buffer;
 
     /**
      * Read the events from the file
@@ -29,7 +30,7 @@ public class DriverTest {
     public void setUp() throws IOException {
         String path = "src/test/resources/data.txt";
         ObjectMapper objectMapper = new ObjectMapper();
-        buffer = new LinkedList<>();
+        buffer = new LinkedBlockingQueue<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             for (String line; (line = br.readLine()) != null; ) {

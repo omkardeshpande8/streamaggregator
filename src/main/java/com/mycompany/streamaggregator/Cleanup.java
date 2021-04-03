@@ -59,6 +59,8 @@ public class Cleanup extends Thread {
             //aggregate remaining event in buffer
             LOGGER.info("Processing buffer");
             eventAggregator.aggregateAndPrint();
+            // if the buffer was full, it just got freed. There might be an outstanding record. Process it.
+            eventAggregator.aggregateAndPrint();
         }
     }
 }
