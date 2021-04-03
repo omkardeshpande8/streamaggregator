@@ -66,8 +66,7 @@ public class Driver {
         Queue<Event> buffer = new LinkedList<>();
         EventAggregator eventAggregator = new EventAggregator(buffer);
         ScheduledExecutorService scheduledExecutorService =
-                Executors.newScheduledThreadPool(2);
-
+                Executors.newScheduledThreadPool(1);
 
         //Create event source
         EventHandler eventHandler = new BufferedEventHandler(buffer);
@@ -83,7 +82,6 @@ public class Driver {
 
         // Schedule consumer threads at fixed interval
         scheduledExecutorService.scheduleAtFixedRate(eventAggregator::aggregateAndPrint, interval, interval, TimeUnit.SECONDS);
-        scheduledExecutorService.scheduleAtFixedRate(eventAggregator::printBufferStats, interval, interval, TimeUnit.SECONDS);
 
         // Add shutdown hook to clean up source and consumer
         Runtime.getRuntime().addShutdownHook(new Cleanup(scheduledExecutorService, eventAggregator, eventSource));

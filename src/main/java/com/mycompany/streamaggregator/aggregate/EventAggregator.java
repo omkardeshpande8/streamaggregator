@@ -47,19 +47,19 @@ public class EventAggregator {
     public Map<GroupingKey, Integer> aggregate() {
         Map<GroupingKey, Integer> map = new HashMap<>();
         int size = buffer.size();
-        LOGGER.info("Processing {} events", buffer.size());
         for (int i = 0; i < size; i++) {
             Event poll = buffer.poll();
             GroupingKey gk = new GroupingKey(poll.getDevice(), poll.getTitle(), poll.getCountry());
             map.put(gk, map.getOrDefault(gk, 0) + 1);
         }
+        printBufferStats(size);
         return map;
     }
 
     /**
      * Print size of buffer
      */
-    public void printBufferStats() {
-        LOGGER.info("buffer size:{} ", buffer.size());
+    private void printBufferStats(int processedSize) {
+        LOGGER.info("Processed events: {}, buffer size:{} ", processedSize, buffer.size());
     }
 }
