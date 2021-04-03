@@ -28,64 +28,41 @@ public class EventAggregator {
      */
     private final Queue<Event> buffer;
 
-    /**
-     * boolean indicating whether aggregation should lock the buffer
-     */
-    private final boolean synchronize;
-
     public EventAggregator(Queue<Event> buffer) {
-        this(buffer, true);
-    }
-
-    public EventAggregator(Queue<Event> buffer, boolean synchronize) {
         this.buffer = buffer;
-        this.synchronize = synchronize;
     }
 
     /**
      * Aggregates the buffer and prints the result
      */
     public void aggregateAndPrint() {
-        Map<GroupingKey, Integer> map = synchronize ? aggregateSync() : aggregate();
-        if(map != null){
-            map.entrySet().stream()
-                    .map(OutputRecord::new)
-                    .map(OutputRecord::toString)
-                    .forEach(LOGGER::info);
-        }
+        Map<GroupingKey, Integer> map = aggregate();
+        map.entrySet().stream()
+                .map(OutputRecord::new)
+                .map(OutputRecord::toString)
+                .forEach(LOGGER::info);
     }
-
-    /**
-     * Aggregation function converts queue of event to desired output i.e. grouping key and count
-     */
-    private final Function<Queue<Event>, Map<GroupingKey, Integer>> aggregateFunction = events -> {
-        int size = events.size();
-        Map<GroupingKey, Integer> map = IntStream.range(0, size)
-                .mapToObj(i -> events.poll())
-                .filter(Objects::nonNull)
-                .map(event -> new GroupingKey(event.getDevice(), event.getTitle(), event.getCountry()))
-                .collect(Collectors.toMap(Function.identity(), groupingKey -> 1, Integer::sum));
-
-        LOGGER.info("Processed events: {}, buffer size:{} ", size, events.size());
-        return map;
-    };
 
     /**
      * Aggregate buffer
      * @return map of key used for grouping and count
      */
     public Map<GroupingKey, Integer> aggregate() {
-        return aggregateFunction.apply(buffer);
+        int size = buffer.size();
+        Map<GroupingKey, Integer> map = IntStream.range(0, size)
+                .mapToObj(i -> buffer.poll())
+                .filter(Objects::nonNull)
+                .map(event -> new GroupingKey(event.getDevice(), event.getTitle(), event.getCountry()))
+                .collect(Collectors.toMap(Function.identity(), groupingKey -> 1, Integer::sum));
+
+        printBufferStats(size);
+        return map;
     }
 
     /**
-     * Lock the buffer and aggregate buffer. No new elements will be added to the buffer.
-     * @return map of key used for grouping and count
+     * Print size of buffer
      */
-    public Map<GroupingKey, Integer> aggregateSync() {
-        synchronized (buffer) {
-            return aggregateFunction.apply(buffer);
-        }
+    private void printBufferStats(int processedSize) {
+        LOGGER.info("Processed events: {}, buffer size:{} ", processedSize, buffer.size());
     }
-
 }
