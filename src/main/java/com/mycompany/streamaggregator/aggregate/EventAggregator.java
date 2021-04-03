@@ -6,9 +6,12 @@ import com.mycompany.streamaggregator.bean.OutputRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Queue;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * The aggregator class that consumes events from the buffer and aggregates them.
@@ -45,13 +48,13 @@ public class EventAggregator {
      * @return map of key used for grouping and count
      */
     public Map<GroupingKey, Integer> aggregate() {
-        Map<GroupingKey, Integer> map = new HashMap<>();
         int size = buffer.size();
-        for (int i = 0; i < size; i++) {
-            Event poll = buffer.poll();
-            GroupingKey gk = new GroupingKey(poll.getDevice(), poll.getTitle(), poll.getCountry());
-            map.put(gk, map.getOrDefault(gk, 0) + 1);
-        }
+        Map<GroupingKey, Integer> map = IntStream.range(0, size)
+                .mapToObj(i -> buffer.poll())
+                .filter(Objects::nonNull)
+                .map(event -> new GroupingKey(event.getDevice(), event.getTitle(), event.getCountry()))
+                .collect(Collectors.toMap(Function.identity(), groupingKey -> 1, Integer::sum));
+
         printBufferStats(size);
         return map;
     }
