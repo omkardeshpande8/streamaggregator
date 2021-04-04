@@ -46,7 +46,7 @@ public class DriverTest {
         assertEquals(bufferWrapper.getSize(), 3596);
         EventAggregator aggregator = new EventAggregator(bufferWrapper);
         Map<GroupingKey, Integer> aggregate = aggregator.aggregate();
-        assertEquals(aggregate.get(new GroupingKey("xbox_one_x", "ointb", "USA")), 7);
+        assertEquals(aggregate.get(new GroupingKey("xbox_360", "narcos", "CA")), 8);
         assertEquals(bufferWrapper.getSize(), 0);
 
     }
