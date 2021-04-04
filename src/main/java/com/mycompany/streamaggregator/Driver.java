@@ -2,6 +2,7 @@ package com.mycompany.streamaggregator;
 
 import com.launchdarkly.eventsource.EventHandler;
 import com.launchdarkly.eventsource.EventSource;
+import com.mycompany.streamaggregator.handler.BufferWrapper;
 import com.mycompany.streamaggregator.handler.BufferedEventHandler;
 import com.mycompany.streamaggregator.aggregate.EventAggregator;
 import com.mycompany.streamaggregator.bean.Event;
@@ -73,13 +74,13 @@ public class Driver {
         boolean backPressure = Boolean.parseBoolean(properties.getProperty(BACKPRESSURE_ENABLED, Boolean.toString(Boolean.FALSE)));
         int maxSize = Integer.parseInt(properties.getProperty(MAX_SIZE, Integer.toString(Integer.MAX_VALUE)));
 
-        BlockingQueue<Event> buffer = new LinkedBlockingQueue<>(maxSize);
-        EventAggregator eventAggregator = new EventAggregator(buffer, backPressure);
+        BufferWrapper bufferWrapper = new BufferWrapper(maxSize, backPressure);
+        EventAggregator eventAggregator = new EventAggregator(bufferWrapper);
         ScheduledExecutorService scheduledExecutorService =
                 Executors.newScheduledThreadPool(1);
 
         //Create event source
-        EventHandler eventHandler = new BufferedEventHandler(buffer, backPressure);
+        EventHandler eventHandler = new BufferedEventHandler(bufferWrapper);
         URI uri = URI.create(SERVICE_ADDRESS);
         EventSource.Builder builder = new EventSource.Builder(eventHandler, uri)
                 .reconnectTime(Duration.ofMillis(3000));

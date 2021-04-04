@@ -19,10 +19,11 @@ public class Event {
      * Logger for the class
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(Event.class);
+
     /**
      * Enum Sev
      */
-    public enum Sev{
+    public enum Sev {
         @JsonProperty("success")
         SUCCESS,
         @JsonProperty("error")
@@ -32,30 +33,31 @@ public class Event {
     /**
      * Device
      */
-    public String device;
+    private String device;
 
     /**
      * Sev
      */
-    public Sev sev;
+    private Sev sev;
 
     /**
      * Title
      */
-    public String title;
+    private String title;
 
     /**
      * Country
      */
-    public String country;
+    private String country;
 
     /**
      * Timestamp
      */
-    public long time;
+    private long time;
 
     /**
      * Getter for device
+     *
      * @return string device
      */
     public String getDevice() {
@@ -64,6 +66,7 @@ public class Event {
 
     /**
      * Getter for sev
+     *
      * @return sev sev
      */
     public Sev getSev() {
@@ -72,6 +75,7 @@ public class Event {
 
     /**
      * Getter for title
+     *
      * @return string title
      */
     public String getTitle() {
@@ -80,6 +84,7 @@ public class Event {
 
     /**
      * Getter for country
+     *
      * @return string country
      */
     public String getCountry() {
@@ -88,6 +93,7 @@ public class Event {
 
     /**
      * Getter for time
+     *
      * @return long time
      */
     public long getTime() {
@@ -97,10 +103,11 @@ public class Event {
     /**
      * Parse json event and return an instance of class Event
      * Returns null if json parsing fails. The JsonProcessingException is not thrown
+     *
      * @param event Json representation of the string
      * @return instance of class event
      */
-    public static Event getEventFromJson(String event){
+    public static Event getEventFromJson(String event) {
         try {
             return objectMapper.readValue(event, Event.class);
         } catch (JsonProcessingException e) {

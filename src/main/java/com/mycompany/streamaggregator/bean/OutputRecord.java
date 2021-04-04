@@ -1,5 +1,7 @@
 package com.mycompany.streamaggregator.bean;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -11,7 +13,7 @@ import java.util.Map;
 /**
  * A helper class to print the output in specified format
  */
-public class OutputRecord extends GroupingKey{
+public class OutputRecord extends GroupingKey {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
     /**
@@ -20,33 +22,36 @@ public class OutputRecord extends GroupingKey{
     private static final Logger LOGGER = LoggerFactory.getLogger(OutputRecord.class);
 
     /**
-     * Count
+     * Sps
      */
-    private final int count;
+    private final int sps;
 
     /**
      * Public constructor
+     *
      * @param entry entry of grouping key and integer count
      */
-    public OutputRecord(Map.Entry<GroupingKey,Integer> entry) {
+    public OutputRecord(Map.Entry<GroupingKey, Integer> entry) {
         this(entry.getKey(), entry.getValue());
     }
 
-    private OutputRecord(GroupingKey key, int count) {
+    private OutputRecord(GroupingKey key, int sps) {
         super(key.getDevice(), key.getTitle(), key.getCountry());
-        this.count = count;
+        this.sps = sps;
     }
 
     /**
-     * Getter for count
-     * @return count
+     * Getter for sps
+     *
+     * @return sps
      */
-    public int getCount() {
-        return count;
+    public int getSps() {
+        return sps;
     }
 
     /**
      * Json representation of the object
+     *
      * @return json string
      */
     @Override

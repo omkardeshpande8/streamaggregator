@@ -23,8 +23,9 @@ public class GroupingKey {
 
     /**
      * Constructor
-     * @param device device
-     * @param title title
+     *
+     * @param device  device
+     * @param title   title
      * @param country country
      */
     public GroupingKey(String device, String title, String country) {
@@ -55,6 +56,7 @@ public class GroupingKey {
 
     /**
      * Getter for device
+     *
      * @return string device
      */
     public String getDevice() {
@@ -63,6 +65,7 @@ public class GroupingKey {
 
     /**
      * Getter for title
+     *
      * @return string title
      */
     public String getTitle() {
@@ -71,6 +74,7 @@ public class GroupingKey {
 
     /**
      * Getter for country
+     *
      * @return string country
      */
     public String getCountry() {

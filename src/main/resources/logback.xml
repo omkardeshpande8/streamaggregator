@@ -20,15 +20,15 @@
     </appender>
 
     <logger name="com.launchdarkly.eventsource" level="ERROR">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
     </logger>
 
     <logger name="com.mycompany.streamaggregator.aggregate.EventAggregator" level="INFO" additivity="false">
-        <appender-ref ref="SIMPLE" />
-        <appender-ref ref="FILE" />
+        <appender-ref ref="SIMPLE"/>
+        <appender-ref ref="FILE"/>
     </logger>
 
     <root level="INFO">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
     </root>
 </configuration>

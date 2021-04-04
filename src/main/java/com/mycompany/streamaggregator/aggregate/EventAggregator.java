@@ -3,14 +3,13 @@ package com.mycompany.streamaggregator.aggregate;
 import com.mycompany.streamaggregator.bean.Event;
 import com.mycompany.streamaggregator.bean.GroupingKey;
 import com.mycompany.streamaggregator.bean.OutputRecord;
+import com.mycompany.streamaggregator.handler.BufferWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.BlockingQueue;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -24,18 +23,11 @@ public class EventAggregator {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(EventAggregator.class);
 
-    /**
-     * Buffer to hold the events
-     */
-    private final BlockingQueue<Event> buffer;
-    /**
-     * Is back pressure enabled
-     */
-    private final boolean isBackpressureEnabled;
+    private final BufferWrapper bufferWrapper;
 
-    public EventAggregator(BlockingQueue<Event> buffer, boolean isBackpressureEnabled) {
-        this.buffer = buffer;
-        this.isBackpressureEnabled = isBackpressureEnabled;
+
+    public EventAggregator(BufferWrapper bufferWrapper) {
+        this.bufferWrapper = bufferWrapper;
     }
 
     /**
@@ -57,40 +49,23 @@ public class EventAggregator {
      * @return map of key used for grouping and count
      */
     public Map<GroupingKey, Integer> aggregate() {
-        List<Event> tempBuffer;
+        List<Event> tempBuffer = bufferWrapper.pollCurrentBuffer();
 
-        if (isBackpressureEnabled) {
-            synchronized (buffer) {
-                tempBuffer = getTempBuffer();
-            }
-        } else {
-            tempBuffer = getTempBuffer();
-        }
         Map<GroupingKey, Integer> map = getCounts(tempBuffer);
         printBufferStats(tempBuffer.size());
         return map;
     }
 
-
-    /**
-     * Drains the buffer to a temp list
-     * @return list temporary data structure for calculating aggregates
-     */
-    private List<Event> getTempBuffer(){
-        int size = buffer.size();
-        List<Event> list = new ArrayList<>(size);
-        buffer.drainTo(list, size);
-        return list;
-    }
-
     /**
      * Generates counts by the grouping key for the events in the buffer
+     *
      * @param events list of events
      * @return Map<GroupingKey, Integer> grouping key and count is value
      */
     private Map<GroupingKey, Integer> getCounts(List<Event> events) {
         return events.stream()
                 .filter(Objects::nonNull)
+                .filter(event -> Event.Sev.SUCCESS.equals(event.getSev()))
                 .map(event -> new GroupingKey(event.getDevice(), event.getTitle(), event.getCountry()))
                 .collect(Collectors.toMap(Function.identity(), groupingKey -> 1, Integer::sum));
     }
@@ -99,6 +74,6 @@ public class EventAggregator {
      * Print size of buffer
      */
     private void printBufferStats(int processedSize) {
-        LOGGER.info("Processed events: {}, buffer size:{} ", processedSize, buffer.size());
+        LOGGER.info("Processed events: {}, buffer size:{} ", processedSize, bufferWrapper.getSize());
     }
 }
