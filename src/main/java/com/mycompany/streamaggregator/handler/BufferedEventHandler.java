@@ -2,6 +2,7 @@ package com.mycompany.streamaggregator.handler;
 
 import com.launchdarkly.eventsource.EventHandler;
 import com.launchdarkly.eventsource.MessageEvent;
+import com.mycompany.streamaggregator.buffer.BufferWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

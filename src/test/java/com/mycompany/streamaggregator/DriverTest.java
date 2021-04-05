@@ -3,7 +3,7 @@ package com.mycompany.streamaggregator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.streamaggregator.aggregate.EventAggregator;
 import com.mycompany.streamaggregator.bean.GroupingKey;
-import com.mycompany.streamaggregator.handler.BufferWrapper;
+import com.mycompany.streamaggregator.buffer.BufferWrapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

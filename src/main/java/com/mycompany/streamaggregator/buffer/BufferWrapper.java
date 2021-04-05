@@ -1,4 +1,4 @@
-package com.mycompany.streamaggregator.handler;
+package com.mycompany.streamaggregator.buffer;
 
 import com.mycompany.streamaggregator.bean.Event;
 import org.slf4j.Logger;

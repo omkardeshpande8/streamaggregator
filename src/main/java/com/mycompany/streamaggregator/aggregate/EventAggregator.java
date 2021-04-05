@@ -3,7 +3,7 @@ package com.mycompany.streamaggregator.aggregate;
 import com.mycompany.streamaggregator.bean.Event;
 import com.mycompany.streamaggregator.bean.GroupingKey;
 import com.mycompany.streamaggregator.bean.OutputRecord;
-import com.mycompany.streamaggregator.handler.BufferWrapper;
+import com.mycompany.streamaggregator.buffer.BufferWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

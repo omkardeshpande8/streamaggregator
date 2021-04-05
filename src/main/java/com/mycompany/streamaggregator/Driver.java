@@ -2,10 +2,9 @@ package com.mycompany.streamaggregator;
 
 import com.launchdarkly.eventsource.EventHandler;
 import com.launchdarkly.eventsource.EventSource;
-import com.mycompany.streamaggregator.handler.BufferWrapper;
+import com.mycompany.streamaggregator.buffer.BufferWrapper;
 import com.mycompany.streamaggregator.handler.BufferedEventHandler;
 import com.mycompany.streamaggregator.aggregate.EventAggregator;
-import com.mycompany.streamaggregator.bean.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +13,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.time.Duration;
 import java.util.Properties;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 

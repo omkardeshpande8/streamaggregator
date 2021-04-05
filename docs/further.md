@@ -13,3 +13,4 @@ The output can be stored into the time-series database like Prometheus and then 
 
 ### Functional Testing
 I have stored a few records in a text file, and it is used as input for correctness testing. The data in a file is meant to simulate the event buffer.
+By stubbing a server, the application can be tested in streaming fashion.
